@@ -10,9 +10,11 @@ provider:
   runtime: nodejs8.10
 
 functions:
-  hello:
-    handler: handler.hello
+  generateWeeklySummary:
+    handler: handler.generateWeeklySummary
     events:
-      - http:
-          method: get
-          path: hello
+      - schedule:
+        name: weekly-summary-schedule
+        description: "Weekly function run for generate weekly summary"
+        # Mondays, 1:11 AM
+        rate: cron(11 1 * * 1)
