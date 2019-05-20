@@ -15,18 +15,18 @@ export const generateWeeklySummary: ScheduledHandler = async (
 
   console.log("Received Pull Requests. Generating e-mail.");
 
-  let emailBody = "";
+  const emailBody = Object.entries(recentlyClosedPullRequests).reduce(
+    (emailBody, [repoName, pullRequests]) => {
+      emailBody += `# ${repoName}\n\n`;
 
-  Object.entries(recentlyClosedPullRequests).forEach(
-    ([repoName, pullRequests]) => {
-      emailBody = emailBody.concat(`# ${repoName}\n\n`);
       pullRequests.forEach(pullRequest => {
-        emailBody = emailBody.concat(
-          `* ${pullRequest.title} (${pullRequest.url})\n`
-        );
+        emailBody += `* ${pullRequest.title} (${pullRequest.url})\n`;
       });
-      emailBody = emailBody.concat("\n");
-    }
+      emailBody += "\n";
+
+      return emailBody;
+    },
+    ""
   );
 
   console.log("Generated email body:");
